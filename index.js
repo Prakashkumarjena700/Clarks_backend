@@ -5,6 +5,7 @@ const { userRoute } = require("./routes/user.route")
 const { authenticate } = require("./middleware/authenticate.middleware")
 const { dataRoute } = require("./routes/data.routes")
 const { cartRoute } = require("./routes/cart.routes")
+const { adminRoute } = require("./routes/admin.routes")
 
 const app = expresss()
 app.use(expresss.json())
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 
 app.use("/users", userRoute)
 app.use("/data", dataRoute)
+app.use("/admin", adminRoute)
 app.use(authenticate)
 app.use("/cart", cartRoute)
 
