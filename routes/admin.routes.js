@@ -37,7 +37,7 @@ adminRoute.post("/login", async (req, res) => {
             bcrypt.compare(password, admin[0].password, (err, result) => {
                 if (result) {
                     const token = jwt.sign({ userID: admin[0]._id }, "clsrks")
-                    res.send({ "msg": "Login sucessful as Admin", token, fullname: admin[0].fullname, gender: admin[0].gender, age: admin[0].age, country: admin[0].country, email: admin[0].email, image: admin[0].country })
+                    res.send({ "msg": "Login sucessful as Admin", token, fullname: admin[0].fullname, gender: admin[0].gender, age: admin[0].age, country: admin[0].country, email: admin[0].email, image: admin[0].image })
                 } else {
                     res.send({ "msg": "Something went wrong" })
                 }
