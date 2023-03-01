@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken")
 const authenticate = (req, res, next) => {
     const token = req.headers.authorization
     if (token) {
-        jwt.verify(token, "onemg", (err, decoded) => {
+        jwt.verify(token, "clarks", (err, decoded) => {
             if (decoded) {
                 req.body.user = decoded.userID
                 next()

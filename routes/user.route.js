@@ -5,6 +5,15 @@ const bcrypt = require('bcrypt');
 
 const userRoute = express.Router()
 
+userRoute.get("/",async (req,res)=>{
+    try{
+        let usersdata=await userModel.find()
+        res.send(usersdata)
+    }catch(err){
+        res.send({"msg":"Can't find users"})
+    }
+})
+
 userRoute.post("/register", async (req, res) => {
     const { email, firstname, lastname, password } = req.body
     try {
@@ -36,7 +45,7 @@ userRoute.post("/login", async (req, res) => {
         if (user.length > 0) {
             bcrypt.compare(password, user[0].password, (err, result) => {
                 if (result) {
-                    const token = jwt.sign({ userID: user[0]._id }, "onemg")
+                    const token = jwt.sign({ userID: user[0]._id }, "clarks")
                     res.send({ "msg": "Login sucessful", token, email: user[0].email, firstname: user[0].firstname, lastname: user[0].lastname })
                 } else {
                     res.send({ "msg": "Something went wrong" })
