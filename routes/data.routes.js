@@ -13,7 +13,22 @@ dataRoute.get("/", async (req, res) => {
         x = {}
     } else if (q !== undefined && gender == undefined && color == undefined && rating === undefined && type == undefined && size == undefined) {
         x = query
-    } else if (q == undefined && gender !== undefined && color == undefined && rating === undefined && type == undefined && size == undefined) {
+    } else if (q == undefined && gender == 'Kids' && color == undefined && rating === undefined && type == undefined && size == undefined) {
+        x = { $or: [{ gender: "Boy" }, { gender: "Girl" }] }
+    } else if (q == undefined && gender == 'Kids' && color !== undefined && rating === undefined && type == undefined && size == undefined) {
+        x = { $or: [{ gender: "Boy" }, { gender: "Girl" }], color }
+    } else if (q == undefined && gender == 'Kids' && color !== undefined && rating === undefined && type !== undefined && size == undefined) {
+        x = { $or: [{ gender: "Boy" }, { gender: "Girl" }], color, type }
+    } else if (q == undefined && gender == 'Kids' && color !== undefined && rating === undefined && type !== undefined && size !== undefined) {
+        x = { $or: [{ gender: "Boy" }, { gender: "Girl" }], color, type, size: { $in: [size] } }
+    }
+    else if (q == undefined && gender == 'Kids' && color == undefined && rating === undefined && type !== undefined && size == undefined) {
+        x = { $or: [{ gender: "Boy" }, { gender: "Girl" }], type }
+    }
+    else if (q == undefined && gender == 'Kids' && color == undefined && rating === undefined && type === undefined && size !== undefined) {
+        x = { $or: [{ gender: "Boy" }, { gender: "Girl" }], size: { $in: [size] } }
+    }
+    else if (q == undefined && gender !== undefined && color == undefined && rating === undefined && type == undefined && size == undefined) {
         x = { gender }
     } else if (q == undefined && gender !== undefined && color !== undefined && rating !== undefined && type != undefined && size == undefined) {
         x = { color, gender, rating, type }
