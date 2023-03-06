@@ -7,8 +7,11 @@ const { dataRoute } = require("./routes/data.routes")
 const { cartRoute } = require("./routes/cart.routes")
 const { adminRoute } = require("./routes/admin.routes")
 
+var cors = require('cors')
+
 const app = expresss()
 app.use(expresss.json())
+app.use(cors())
 
 app.get("/", (req, res) => {
     res.send("Welcome to Clarck DB")
