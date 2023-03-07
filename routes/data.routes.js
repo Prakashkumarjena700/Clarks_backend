@@ -8,56 +8,22 @@ dataRoute.get("/", async (req, res) => {
 
     const query = { dis: { $regex: q, $options: "i" } }
 
-    let x;
-    if (q == undefined && gender == undefined && rating === undefined && color == undefined && type == undefined && size == undefined) {
-        x = {}
-    } else if (q !== undefined && gender == undefined && color == undefined && rating === undefined && type == undefined && size == undefined) {
-        x = query
-    } else if (q == undefined && gender == 'Kids' && color == undefined && rating === undefined && type == undefined && size == undefined) {
-        x = { $or: [{ gender: "Boy" }, { gender: "Girl" }] }
-    } else if (q == undefined && gender == 'Kids' && color !== undefined && rating === undefined && type == undefined && size == undefined) {
-        x = { $or: [{ gender: "Boy" }, { gender: "Girl" }], color }
-    } else if (q == undefined && gender == 'Kids' && color !== undefined && rating === undefined && type !== undefined && size == undefined) {
-        x = { $or: [{ gender: "Boy" }, { gender: "Girl" }], color, type }
-    } else if (q == undefined && gender == 'Kids' && color !== undefined && rating === undefined && type !== undefined && size !== undefined) {
-        x = { $or: [{ gender: "Boy" }, { gender: "Girl" }], color, type, size: { $in: [size] } }
+    let filter = {}
+
+    if (gender) {
+        filter.gender = gender
     }
-    else if (q == undefined && gender == 'Kids' && color == undefined && rating === undefined && type !== undefined && size == undefined) {
-        x = { $or: [{ gender: "Boy" }, { gender: "Girl" }], type }
+    if (type) {
+        filter.type = type
     }
-    else if (q == undefined && gender == 'Kids' && color == undefined && rating === undefined && type === undefined && size !== undefined) {
-        x = { $or: [{ gender: "Boy" }, { gender: "Girl" }], size: { $in: [size] } }
+    if (size) {
+        filter.size = size
     }
-    else if (q == undefined && gender !== undefined && color == undefined && rating === undefined && type == undefined && size == undefined) {
-        x = { gender }
-    } else if (q == undefined && gender !== undefined && color !== undefined && rating !== undefined && type != undefined && size == undefined) {
-        x = { color, gender, rating, type }
-    } else if (q == undefined && gender == undefined && rating === undefined && color !== undefined && type == undefined && size == undefined) {
-        x = { color }
-    } else if (q == undefined && gender == undefined && rating !== undefined && color !== undefined && type == undefined && size == undefined) {
-        x = { rating, color }
-    } else if (q == undefined && gender !== undefined && rating === undefined && color !== undefined && type == undefined && size == undefined) {
-        x = { color, gender }
-    } else if (q == undefined && gender !== undefined && rating !== undefined && color == undefined && type == undefined && size == undefined) {
-        x = { gender, rating }
-    } else if (q == undefined && gender == undefined && rating == undefined && color == undefined && type !== undefined && size == undefined) {
-        x = { type }
-    } else if (q == undefined && gender == undefined && rating == undefined && color !== undefined && type !== undefined && size == undefined) {
-        x = { type, color }
-    } else if (q == undefined && gender == undefined && rating !== undefined && color == undefined && type !== undefined && size == undefined) {
-        x = { type, rating }
-    } else if (q == undefined && gender !== undefined && rating == undefined && color == undefined && type !== undefined && size == undefined) {
-        x = { type, gender }
-    } else if (q == undefined && gender === undefined && rating == undefined && color == undefined && type === undefined && size !== undefined) {
-        x = { size: { $in: [size] } }
-    } else if (q == undefined && gender === undefined && rating == undefined && color == undefined && type !== undefined && size !== undefined) {
-        x = { size: { $in: [size] }, type }
-    } else if (q == undefined && gender === undefined && rating == undefined && color !== undefined && type !== undefined && size !== undefined) {
-        x = { size: { $in: [size] }, type, color }
-    } else if (q == undefined && gender === undefined && rating !== undefined && color !== undefined && type !== undefined && size !== undefined) {
-        x = { size: { $in: [size] }, type, color, rating }
-    } else if (q == undefined && gender !== undefined && rating !== undefined && color !== undefined && type !== undefined && size !== undefined) {
-        x = { size: { $in: [size] }, type, color, rating, gender }
+    if (color) {
+        filter.color = color
+    }
+    if (rating) {
+        filter.rating = rating
     }
 
     let y = {}
@@ -69,12 +35,32 @@ dataRoute.get("/", async (req, res) => {
         y = { name: order }
     }
 
+
+    let actualFilter = {}
+    for (let key in filter) {
+        if (filter[key] !== ' ') {
+            actualFilter[key] = filter[key]
+        }
+    }
+
+    if (actualFilter.size) {
+        actualFilter.size = { $in: [size] }
+    }
+
+    if (q) {
+        actualFilter = query
+    }
+
     try {
-        let data = await dataModel.find(x).sort(y).limit(limit).skip(skip)
+
+
+
+        let data = await dataModel.find(actualFilter).sort(y).limit(limit).skip(skip)
         res.send(data)
 
     } catch (err) {
         res.send("Can't find product")
+        console.log(err)
     }
 })
 
