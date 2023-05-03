@@ -8,6 +8,7 @@ const { cartRoute } = require("./routes/cart.routes")
 const { adminRoute } = require("./routes/admin.routes")
 
 var cors = require('cors')
+const { checkoutRoutes } = require("./routes/checkout.routes")
 
 const app = expresss()
 app.use(expresss.json())
@@ -23,6 +24,7 @@ app.use("/data", dataRoute)
 app.use("/admin", adminRoute)
 app.use(authenticate)
 app.use("/cart", cartRoute)
+app.use("/checkout",checkoutRoutes)
 
 app.listen(4500, async () => {
     try {
